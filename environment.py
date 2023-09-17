@@ -24,12 +24,12 @@ class CustomGridworldEnv(gym.Env):
         })
 
 # Initialize Pygame
-        # pygame.init()
-        # self.screen_width = 400
-        # self.screen_height = 400
-        # self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        # pygame.display.set_caption("Multi Agent RL Environment")
-        # self.clock = pygame.time.Clock()
+        pygame.init()
+        self.screen_width = 400
+        self.screen_height = 400
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        pygame.display.set_caption("Multi Agent RL Environment")
+        self.clock = pygame.time.Clock()
 
         # # Load agent image
         # self.agent_image = pygame.image.load("C:/Users/vedan/Documents/RL Environment/agent.png")
@@ -145,74 +145,74 @@ class CustomGridworldEnv(gym.Env):
 
         return observations
     
-    def render(self):
-        for agent_idx in range(self.num_agents):
-            grid = np.full((self.grid_height, self.grid_width), '~')  # Initialize grid with water cells
-            grid[1:2, 1:2] = '|'
-            for row in range(0, self.grid_height):
-                for col in range(0, self.grid_width):
-                    location = (row, col)
-                    if location == self.agent_locations[agent_idx]:
-                        if self.agent_drowning_time[agent_idx] >= 1:
-                            grid[row, col] = 'D'  # Drowning agent
-                        else:
-                            grid[row, col] = 'A'  # Agent on land
-                    elif not self._is_water(location) and not 1 <= row <= 2:
-                        grid[row, col] = '_'  # Land
-
-                    elif 1 <= row <= 2 and 1 <= col <= 2:
-                        grid[row, col] = '|'
-
-
-
-            print(f"Agent {agent_idx + 1} Grid:")
-            print(np.flipud(grid))
-            print()
-
     # def render(self):
+    #     for agent_idx in range(self.num_agents):
+    #         grid = np.full((self.grid_height, self.grid_width), '~')  # Initialize grid with water cells
+    #         grid[1:2, 1:2] = '|'
+    #         for row in range(0, self.grid_height):
+    #             for col in range(0, self.grid_width):
+    #                 location = (row, col)
+    #                 if location == self.agent_locations[agent_idx]:
+    #                     if self.agent_drowning_time[agent_idx] >= 1:
+    #                         grid[row, col] = 'D'  # Drowning agent
+    #                     else:
+    #                         grid[row, col] = 'A'  # Agent on land
+    #                 elif not self._is_water(location) and not 1 <= row <= 2:
+    #                     grid[row, col] = '_'  # Land
 
-    #     cell_width = self.screen_width // self.grid_width
-    #     cell_height = self.screen_height // self.grid_height
+    #                 elif 1 <= row <= 2 and 1 <= col <= 2:
+    #                     grid[row, col] = '|'
 
-    #     # Create a transparent grid surface
-    #     grid_surface = pygame.Surface((self.screen_width, self.screen_height), pygame.SRCALPHA)
 
-    #     # Render the grid cells
-    #     for row in range(self.grid_height):
-    #         for col in range(self.grid_width):
-    #             x = col * cell_width
-    #             y = row * cell_height
 
-    #             # Set cell color based on land, water, or bridge
-    #             if self._is_water((row, col)):
-    #                 color = (0, 0, 255, 128)  # Blue for water
-    #             elif 1 <= row <= 2 and 1 <= col <= 2:
-    #                 color = (128,128,128, 128)  # Black for bridge
-    #             else:
-    #                 color = (0, 255, 0, 128)  # Green for land
+    #         print(f"Agent {agent_idx + 1} Grid:")
+    #         print(np.flipud(grid))
+    #         print()
 
-    #              # Render the cell
-    #             pygame.draw.rect(self.screen, color, (x, y, cell_width, cell_height))
+    def render(self):
 
-    #     # Render the grid lines on the grid surface
-    #     line_color = (0, 0, 0, 128)  # Black color for grid lines (with transparency)
-    #     for x in range(0, self.screen_width, cell_width):
-    #         pygame.draw.line(grid_surface, line_color, (x, 0), (x, self.screen_height), 1)
-    #     for y in range(0, self.screen_height, cell_height):
-    #         pygame.draw.line(grid_surface, line_color, (0, y), (self.screen_width, y), 1)
+        cell_width = self.screen_width // self.grid_width
+        cell_height = self.screen_height // self.grid_height
 
-    #     # Render the agents as red circles on top of the grid surface
-    #     agent_radius = min(cell_width, cell_height) // 3
-    #     for agent_location in self.agent_locations:
-    #         agent_row, agent_col = agent_location
-    #         agent_x = (agent_col + 0.80) * cell_width - agent_radius
-    #         agent_y = (agent_row + 0.80) * cell_height - agent_radius
-    #         pygame.draw.circle(grid_surface, (255, 0, 0), (int(agent_x), int(agent_y)), agent_radius)
+        # Create a transparent grid surface
+        grid_surface = pygame.Surface((self.screen_width, self.screen_height), pygame.SRCALPHA)
 
-    #     # Blit the grid surface onto the screen
-    #     grid_surface_flipped = pygame.transform.flip(grid_surface, False, True)
-    #     self.screen.blit(grid_surface_flipped, (0, 0))
+        # Render the grid cells
+        for row in range(self.grid_height):
+            for col in range(self.grid_width):
+                x = col * cell_width
+                y = row * cell_height
 
-    #     pygame.display.flip()
+                # Set cell color based on land, water, or bridge
+                if self._is_water((row, col)):
+                    color = (0, 0, 255, 128)  # Blue for water
+                elif 1 <= row <= 2 and 1 <= col <= 2:
+                    color = (128,128,128, 128)  # Black for bridge
+                else:
+                    color = (0, 255, 0, 128)  # Green for land
+
+                 # Render the cell
+                pygame.draw.rect(self.screen, color, (x, y, cell_width, cell_height))
+
+        # Render the grid lines on the grid surface
+        line_color = (0, 0, 0, 128)  # Black color for grid lines (with transparency)
+        for x in range(0, self.screen_width, cell_width):
+            pygame.draw.line(grid_surface, line_color, (x, 0), (x, self.screen_height), 1)
+        for y in range(0, self.screen_height, cell_height):
+            pygame.draw.line(grid_surface, line_color, (0, y), (self.screen_width, y), 1)
+
+        # Render the agents as red circles on top of the grid surface
+        agent_radius = min(cell_width, cell_height) // 3
+        for agent_location in self.agent_locations:
+            agent_row, agent_col = agent_location
+            agent_x = (agent_col + 0.80) * cell_width - agent_radius
+            agent_y = (agent_row + 0.80) * cell_height - agent_radius
+            pygame.draw.circle(grid_surface, (255, 0, 0), (int(agent_x), int(agent_y)), agent_radius)
+
+        # Blit the grid surface onto the screen
+        grid_surface_flipped = pygame.transform.flip(grid_surface, False, True)
+        self.screen.blit(grid_surface_flipped, (0, 0))
+
+        pygame.display.flip()
 
 
